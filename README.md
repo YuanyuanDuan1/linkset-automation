@@ -5,10 +5,12 @@
 [![ChEMBL linkset](https://img.shields.io/github/actions/workflow/status/CyTargetLinker/linkset-automation/Chembl_MoA.yml?label=ChEMBL%20linkset)](https://github.com/CyTargetLinker/linkset-automation/actions/workflows/Chembl_MoA.yml)
 [![Orphanet linkset](https://img.shields.io/github/actions/workflow/status/CyTargetLinker/linkset-automation/Create_OrphanetLinkset.yml?label=Orphanet%20linkset)](https://github.com/CyTargetLinker/linkset-automation/actions/workflows/Create_OrphanetLinkset.yml)
 [![Reactome linkset](https://img.shields.io/github/actions/workflow/status/CyTargetLinker/linkset-automation/create-linkset-reactome.yml?label=Reactome%20linkset)](https://github.com/CyTargetLinker/linkset-automation/actions/workflows/create-linkset-reactome.yml)
+[![SIGNOR linkset](https://img.shields.io/github/actions/workflow/status/CyTargetLinker/linkset-automation/create-linkset-signor.yml?label=SIGNOR%20linkset)](https://github.com/CyTargetLinker/linkset-automation/actions/workflows/create-linkset-signor.yml)
+[![AOP-Wiki linksets](https://img.shields.io/github/actions/workflow/status/CyTargetLinker/linkset-automation/create-linkset-aopwiki.yml?label=AOP-Wiki%20linksets)](https://github.com/CyTargetLinker/linkset-automation/actions/workflows/create-linkset-aopwiki.yml)
 [![QC XGMML](https://img.shields.io/github/actions/workflow/status/CyTargetLinker/linkset-automation/qc-xgmml.yml?label=QC%20XGMML)](https://github.com/CyTargetLinker/linkset-automation/actions/workflows/qc-xgmml.yml)
 [![BridgeDb cache](https://img.shields.io/github/actions/workflow/status/CyTargetLinker/linkset-automation/update-bridgedb.yml?label=BridgeDb%20cache)](https://github.com/CyTargetLinker/linkset-automation/actions/workflows/update-bridgedb.yml)
 
-Under construction: This repo automatically generates CyTargetLinker linksets from different resources, starting with WikiPathways.
+Under construction: This repo automatically generates CyTargetLinker linksets from different resources.
 
 <img width="692" height="347" alt="image" src="https://github.com/user-attachments/assets/100e64c0-d6e5-47c9-8686-7be01c39c257" />
 
@@ -24,9 +26,11 @@ got, and which databases are still candidates for automation.
 | --- | --- | --- | --- |
 | [WikiPathways](https://www.wikipathways.org) (13 species) | [`wikipathways/`](wikipathways/readme.md) | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4500957.svg)](https://doi.org/10.5281/zenodo.4500957) | CC BY 4.0 |
 | [TFLink](https://tflink.net) (5 species) | [`tflink/`](tflink/readme.md) | [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21804828.svg)](https://doi.org/10.5281/zenodo.21804828) | CC BY-NC 4.0 |
-| [ChEMBL](https://www.ebi.ac.uk/chembl/) (mechanism of action) | [`CHEMBL/`](CHEMBL/readme.md) | not yet deposited | CC BY-SA 3.0 |
+| [ChEMBL](https://www.ebi.ac.uk/chembl/) (mechanism of action, human) | [`CHEMBL/`](CHEMBL/readme.md) | not yet deposited | CC BY-SA 3.0 |
 | [Orphanet](https://www.orphadata.com/) (human) | [`Orphanet/`](Orphanet/readme.md) | not yet deposited | CC BY 4.0 |
 | [Reactome](https://reactome.org/) (human) | [`reactome/`](reactome/readme.md) | not yet deposited | CC0 1.0 |
+| [SIGNOR](https://signor.uniroma2.it/) (human) | [`signor/`](signor/readme.md) | not yet deposited | CC BY 4.0 |
+| [AOP-Wiki](https://aopwiki.org/) (key event–gene, stressor–MIE) | [`aopwiki/`](aopwiki/readme.md) | not yet deposited | CC BY-SA 4.0 |
 
 Each resource name links to its upstream source, and the Details column links to
 that resource's own readme — how it is built, how to update it to a new release,
@@ -37,18 +41,6 @@ The DOI column holds the Zenodo *concept* DOI, which always resolves to the
 latest published version; individual versions have their own DOIs. For resources
 that are not yet deposited the license shown is that of the upstream source data,
 and the license of the eventual deposit still needs to be decided.
-
-## (Intended) Workflow
-1. Run the bridgeDb update script to update bridgeDb versions for all config files.
-2. Check the download link for the resource you want to update (check if an update is required) and copy it into the (data preprocessing) script
-3. Run the preprocessing script to get the input.csv file for this version. The config file is available and should not change between versions.
-4. Run the LinksetCreator
-5. Do the quality control procedure with the obtained xgmml file (see **QC** below).
-6. If positive, run the linkset upload-to-storage script
-7. Update the CTL website to add the new linkset download link and description
-
-The WikiPathways pipeline no longer needs steps 1-3: it resolves the release and
-generates its configs on every run — see [`wikipathways/`](wikipathways/readme.md).
 
 ## QC
 `scripts/qc_xgmml.py` validates that an XGMML linkset is well-formed and has the structure every CyTargetLinker linkset carries (a `<graph>`, nodes with an `identifiers` list + `type`, and edges whose `source`/`target` reference existing nodes plus `datasource`/`interaction`). Empty graphs fail by default.
